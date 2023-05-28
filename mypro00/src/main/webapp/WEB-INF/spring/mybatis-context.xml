@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+<!-- Connection Pool 관련 Bean 구성: HikariCP -->
+
+<!-- 방법1: JDBC 정보를 직접 설정 -->
+<!-- 1. JDBC 설정 정보가 설정된 HikariConfig 빈 생성--><!-- 
+ 	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+		 <property name="driverClassName" value="oracle.jdbc.OracleDriver"></property>
+		 <property name="jdbcUrl" value="jdbc:oracle:thin:@localhost:1521:xe"></property>
+		 <property name="username" value="book_ex"></property> 
+		 <property name="password" value="book_ex"></property>
+	</bean>-->
+<!-- 2. HikariDataSource 클래스를 이용한 dataSource 빈 생성: JDBC 설정이 저장된 HikariConfig 빈 주입받음 --><!-- 
+	 <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+	 	<constructor-arg ref="hikariConfig" />
+	 </bean> -->
+	 
+	 <!-- 방법2: HikariCP - properties 파일을 이용한 접속 구성 -->
+	<!-- 1. jdbc.properties 파일에서 읽어 들이는 설정: PropertyPlaceholderConfigurer 클래스 빈을 이용 -->
+	<!-- [주의] PropertyPlaceholderConfigurer 클래스 빈을 이용하는 아래의 방법은 스프링 5에서 Deprecated. 
+	 <bean id="propertyPlaceholderConfigurer" 
+	 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	 	<property name="locations">
+	 		<value>/WEB-INF/config/jdbc.properties</value>
+	 	</property>
+	 </bean> -->
+	<!-- 1. jdbc.properties 파일에서 읽어 들이는 설정 -->
+	 <!-- properties 파일을 webapp 하위에 구성한 경우: JUnit 에서는 사용되지 못함, 문서에서 구성 않함 -->
+	 <!-- <context:property-placeholder location="/WEB-INF/jdbcConfig/jdbc2.properties"/> -->
+	 <!-- properties 파일을 src/main/resources 하위에 구성한 경우 -->
+	 <context:property-placeholder location="classpath:jdbcConfig/jdbc.properties"/>
+	 
+	 <!-- 2. HikariConfig 빈을 통해 읽어들인 정보를 설정, 설정값 형식이 JSTL 표현식과 유사 -->
+	 <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+	 	<property name="driverClassName" value="${jdbcHikariLog.driverClassName}"></property>
+	 	<property name="jdbcUrl" value="${jdbcHikariLog.jdbcUrl}"></property>
+	 	<property name="username" value="${jdbcHikariLog.username}"></property>
+	 	<property name="password" value="${jdbcHikariLog.password}"></property>
+	 </bean>
+	 
+	 <!-- 3. HikariDataSource 클래스를 이용한 dataSource 빈 생성 -->
+	 <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+	 	<constructor-arg ref="hikariConfig" />
+	 </bean>
+	 
+	 <!-- 4. mybatis-spring 연동 (dataSource 빈 주입 받음) -->
+ 	 <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+ 		<property name="dataSource" ref="dataSource"></property>
+	<!--
+	 <property name="configLocation" 
+	 value="classpath:com/spring5218/mypro00/mapper/mapper/mybatisConfig.xml"/> -->
+	<!-- mybatis-spring <property name="mapperLocations" value="classpath:경로명/*Mapper.xml"> 처럼
+	 value 속성에 하나의 값만 설정해야 했습니다. 버전2 부터 mapperLocations에 여러 개의 매퍼파일들을
+	 아래처럼 정의할 수 있습니다. --><!--
+	 <property name="mapperLocations">
+	 <list>
+	 <value>classpath:com/spring5218/mypro00/mapper/MyBoardMapper.xml</value>
+	 <value>classpath:com/spring5218/mypro00/mapper/MyReplyMapper.xml</value>
+	 </list>
+	 </property> -->
+ 	</bean>
+ 	
+ 	<!-- 5. mybatis-spring 연동 (SqlSessionFactoryBean 빈 주입 받음) -->
+	<!-- SqlSessionFactory 보다 쓰레드에 안전 -->
+	 <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+	 	<constructor-arg index="0" ref="sqlSessionFactory" />
+	 </bean>
+</beans>

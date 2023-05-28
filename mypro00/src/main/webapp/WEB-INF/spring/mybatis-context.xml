@@ -53,18 +53,19 @@
 	 <!-- 4. mybatis-spring 연동 (dataSource 빈 주입 받음) -->
  	 <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
  		<property name="dataSource" ref="dataSource"></property>
+	
 	<!--
 	 <property name="configLocation" 
 	 value="classpath:com/spring5218/mypro00/mapper/mapper/mybatisConfig.xml"/> -->
 	<!-- mybatis-spring <property name="mapperLocations" value="classpath:경로명/*Mapper.xml"> 처럼
 	 value 속성에 하나의 값만 설정해야 했습니다. 버전2 부터 mapperLocations에 여러 개의 매퍼파일들을
-	 아래처럼 정의할 수 있습니다. --><!--
+	 아래처럼 정의할 수 있습니다. -->
 	 <property name="mapperLocations">
-	 <list>
-	 <value>classpath:com/spring5218/mypro00/mapper/MyBoardMapper.xml</value>
-	 <value>classpath:com/spring5218/mypro00/mapper/MyReplyMapper.xml</value>
-	 </list>
-	 </property> -->
+	 	<list>
+	 		<value>classpath:com/spring5218/mypro00/mapper/MyBoardMapper.xml</value>
+	 		<!--<value>classpath:com/spring5218/mypro00/mapper/MyReplyMapper.xml</value>-->
+	 	</list>
+	 </property> 
  	</bean>
  	
  	<!-- 5. mybatis-spring 연동 (SqlSessionFactoryBean 빈 주입 받음) -->
@@ -72,4 +73,8 @@
 	 <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
 	 	<constructor-arg index="0" ref="sqlSessionFactory" />
 	 </bean>
+	 
+<!-- 매퍼인터패이스 자동 빈 생성 -->
+<!-- 설정된 패키지에 DAO클래스를 대신하는 매퍼-인터페이스가 있습니다. -->
+ 	<mybatis-spring:scan base-package="com.spring5218.mypro00.mapper"/>	 
 </beans>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 문서 유형에 mapper를 설정해야 하고, XML 정의 파일은 Mapper의 정의를 가져오도록 설정함 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- SQL문들은 <mapper>와 </mapper> 사이에 해당 문장 유형의 요소를 사용하여 정의함 -->
+<!-- mapper 요소의 namespace 속성에는 매퍼 인터페이스의 패키지이름이 포함된 전체이름을 설정함 -->
+<mapper namespace="com.spring5218.mypro00.mapper.MyBoardMapper">
+
+<!-- 게시물 조회 - 목록 -->
+	 <select id="selectMyBoardList" resultType="com.spring5218.mypro00.domain.MyBoardVO">
+		 SELECT * FROM book_ex.tbl_myboard
+		 WHERE bno > 0 <!-- AND bDelFlag = 0 -->
+		 ORDER BY bno DESC
+	 </select>
+	
+<!-- 게시물 등록1 - selectKey 이용않함 -->
+	 <insert id="insertMyBoard">
+	 <![CDATA[
+		 INSERT INTO book_ex.tbl_myboard
+		 VALUES (seq_myboard.nextval, #{btitle}, #{bcontent}, #{bwriter},
+		 		DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
+	 ]]>
+	 </insert>
+	 
+<!-- 게시물 등록2 - selectKey 이용 -->
+	 <insert id="insertMyBoardSelectKey">
+		 <selectKey keyProperty="bno" order="BEFORE" resultType="long">
+		 	SELECT book_ex.seq_myboard.nextval FROM dual
+		 </selectKey>
+	 
+	 INSERT INTO book_ex.tbl_myboard
+	 VALUES (#{bno}, #{btitle}, #{bcontent}, #{bwriter},
+	 		DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
+	 </insert>
+	 
+<!-- 특정 게시물 조회 -->
+	 <select id="selectMyBoard" resultType="com.spring5218.mypro00.domain.MyBoardVO">
+		 SELECT * FROM book_ex.tbl_myboard
+		 WHERE bno = #{bno} <!-- AND bDelFlag = 0 -->
+	 </select>
+
+<!-- 특정 게시물 수정 -->
+	 <update id="updateMyBoard">
+		 UPDATE book_ex.tbl_myboard
+		 SET btitle = #{btitle},
+		 	bcontent = #{bcontent},
+		 	bmodDate = DEFAULT
+		 WHERE bno = #{bno} <!-- AND bdelFlag = 0 -->
+	 </update>
+	 
+<!-- 특정 게시물 삭제 요청 - 해당 글의 bdelFlag을 1로 수정 -->
+	 <update id="updateBdelFlag">
+		 UPDATE book_ex.tbl_myboard
+		 SET bdelFlag = 1
+		 WHERE bno = #{bno}
+	</update>
+
+<!-- 특정 게시물 삭제 - 실제 삭제 -->
+	 <delete id="deleteMyBoard">
+	 	DELETE book_ex.tbl_myboard WHERE bno = #{bno} <!-- AND bDelFlag = 1 -->
+	 </delete>
+
+<!-- 게시물 삭제 – 삭제 요청된 전체 게시물들 삭제 -->
+	 <delete id="deleteAllBoardSetDeleted">
+	 	DELETE book_ex.tbl_myboard WHERE bDelFlag = 1
+	 </delete>
+
+<!-- 특정 게시물 조회수 증가 : 게시물 조회 시 + 1 -->
+	 <update id="updateBviewsCnt">
+	 	UPDATE book_ex.tbl_myboard
+	 	SET bviewsCnt = bviewsCnt + 1
+	 	WHERE bno = #{bno} <!-- AND bdelFlag = 0 -->
+	 </update>	 
+	 
+</mapper>

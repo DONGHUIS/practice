@@ -31,6 +31,19 @@
 	<logger name="org.springframework.web">
 		<level value="info" />
 	</logger>
+	
+	<!-- JDBC 로그기록 양을 줄이기 위하여 추가된 내용 -->
+	 <logger name="jdbc.audit">
+	 	<level value="warn" />
+	 </logger>
+	 
+	 <logger name="jdbc.resultset">
+	 	<level value="warn" />
+	 </logger>
+	 
+	 <logger name="jdbc.connection">
+	 	<level value="warn" />
+	 </logger>
 
 	<!-- Root Logger -->
 	<root>

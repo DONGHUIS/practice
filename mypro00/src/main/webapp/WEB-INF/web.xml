@@ -1,12 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+<!-- 설정된 URL에서 제동되는 Dynamic Web 모듈에 대한 XML 스키마 정의 파일에 오류가 있어 4.0 버전에서는 사용 못함 -->
+<!-- 
+<web-app version="4.0" xmlns="http://java.sun.com/xml/ns/javaee"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
-
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_4_0.xsd"> --><!-- 사용못함 -->
+	<!-- 위에서 version을 4.0 값으로 수정, xsi:schemaLocation 줄의 제일 마지막에 있는 숫자를 4_0 로 수정 -->
+	
+	<!-- 4.0 일 경우: 오라클 사의 정의 정의 파일 사용: 2021.05 부터. -->
+	<web-app version="4.0" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/javaee 
+	http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/javaee/web-app_4_0.xsd">
+	
+	<!-- 스프링 UTF-8 인코딩 필터(한글처리) -->  한글처리를 위한 UTF-8 인코딩 필터를 추가
+ 	<filter>
+ 		<filter-name>encodingFilter</filter-name>
+ 		<filter-class>
+ 			org.springframework.web.filter.CharacterEncodingFilter
+ 		</filter-class>
+		<init-param>
+		 	<param-name>encoding</param-name>
+		 	<param-value>UTF-8</param-value>
+		 </init-param>
+		 <init-param>
+		 	<param-name>forceEncoding</param-name>
+		 	<param-value>true</param-value>
+		 </init-param>
+		 </filter>
+		 <filter-mapping>
+		 	<filter-name>encodingFilter</filter-name>
+			 <url-pattern>/*</url-pattern>
+		 <!--<servlet-name>appServlet</servlet-name> -->
+		 </filter-mapping>
+	
 	<!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/spring/root-context.xml</param-value>
+		<param-value>
+			/WEB-INF/spring/root-context.xml
+			/WEB-INF/spring/mybatis-context.xml
+		</param-value>
 	</context-param>
 	
 	<!-- Creates the Spring Container shared by all Servlets and Filters -->

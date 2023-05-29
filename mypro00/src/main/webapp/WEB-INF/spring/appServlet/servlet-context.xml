@@ -21,8 +21,8 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
-	<context:component-scan base-package="com.spring5218.mypro00" />
-	
-	
+	<!--<context:component-scan base-package="com.spring5218.mypro00" />  -->
+	<context:component-scan base-package="com.spring5218.mypro00.service"/>
+	<context:component-scan base-package="com.spring5218.mypro00.controller"/>
 	
 </beans:beans>

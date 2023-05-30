@@ -49,12 +49,12 @@ public class MyBoardController {
 		 
 	 }
 	//특정 게시물 조회 페이지 호출: 목록페이지에서 호출
-	 @GetMapping("/detail")
+	/* @GetMapping("/detail")
 	 public void showBoardDetail(@RequestParam("bno") Long bno, Model model) {
 		 log.info("컨트롤러 - 게시물 조회 페이지 호출: "+ bno);
 		 model.addAttribute("board", myBoardService.getBoard(bno));
 		 log.info("컨트롤러 - 화면으로 전달할 model: "+ model);
-	 }
+	 }*/
 	 
 	 
 	//특정 게시물 조회-수정 페이지 호출
@@ -66,12 +66,12 @@ public class MyBoardController {
 	 }
 	 
 	//게시물 조회페이지 -> 수정페이지 호출(/modify)
-	 @GetMapping("/modify")
+	 /*@GetMapping("/modify")
 	 public void showBoardModify(@RequestParam("bno") Long bno, Model model) {
 		 log.info("컨트롤러 - 게시물 수정 페이지 호출: "+ bno);
 		 model.addAttribute("board", myBoardService.getBoardDetailModify(bno));
 		 log.info("컨트롤러 - 화면으로 전달할 model: "+ model);
-	 }
+	 }*/
 
 	 
 	 //특정 게시물 수정 처리

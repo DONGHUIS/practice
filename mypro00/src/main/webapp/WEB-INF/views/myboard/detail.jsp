@@ -70,16 +70,32 @@
         </div>
         <!-- /#page-wrapper -->
         
+        <form id="frmSendValue">
+			 <input type='hidden' name='bno' id="bno" value='<c:out value="${board.bno}"/>'>
+			 <input type='hidden' name='pageNum' value='${myBoardPagingDTO.pageNum}'>
+			 <input type='hidden' name='rowAmountPerPage' value='${myBoardPagingDTO.rowAmountPerPage}'>
+		</form>
+        
+        
         <script>
 		
+        var frmSendValue = $("#frmSendValue");
+        
         //게시물 수정 페이지로 이동
 		$("#BtnMoveModify").on("click", function(){
-		 	location.href='${contextPath}/myboard/modify?bno=<c:out value="${board.bno}"/>';
+			//location.href='${contextPath}/myboard/modify?bno=<c:out value="${board.bno}"/>'; 주석처리
+			 frmSendValue.attr("action", "${contextPath}/myboard/modify");
+			 frmSendValue.attr("method", "get");
+			 frmSendValue.submit();
 		})
 		
 		//게시물 목록 페이지로 이동
 		$("#BtnMoveList").on("click", function(){
-		 	location.href="${contextPath}/myboard/list";
+		 	//location.href="${contextPath}/myboard/list";
+		 	frmSendValue.find("#bno").remove();// 목록화면 이동 시, bno 값 삭제
+		 	frmSendValue.attr("action", "${contextPath}/myboard/list");
+		 	frmSendValue.attr("method", "get");
+		 	frmSendValue.submit();
 		})
 		
 		var result = '<c:out value="${result}"/>';

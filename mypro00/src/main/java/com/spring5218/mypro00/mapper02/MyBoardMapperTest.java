@@ -18,9 +18,5 @@ public class MyBoardMapperTest {
 	 @Setter(onMethod_ = @Autowired)
 	 private MyBoardMapper myBoardMapper;
 	 
-	//게시물 목록 조회 테스트  테스트 후 메서드 주석처리
-	 @Test
-	 public void testSelectBoardList() {
-		 myBoardMapper.selectMyBoardList().forEach(myBoard -> log.info(myBoard));
-	 }
+	
 }

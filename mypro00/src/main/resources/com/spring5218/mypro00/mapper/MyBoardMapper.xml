@@ -7,13 +7,41 @@
 <!-- mapper 요소의 namespace 속성에는 매퍼 인터페이스의 패키지이름이 포함된 전체이름을 설정함 -->
 <mapper namespace="com.spring5218.mypro00.mapper.MyBoardMapper">
 
-<!-- 게시물 조회 - 목록 -->
+<!-- 게시물 조회 - 목록 --><!--
 	 <select id="selectMyBoardList" resultType="com.spring5218.mypro00.domain.MyBoardVO">
 		 SELECT * FROM book_ex.tbl_myboard
-		 WHERE bno > 0 <!-- AND bDelFlag = 0 -->
+		 WHERE bno > 0 
 		 ORDER BY bno DESC
+	 </select>-->
+	 
+<!-- 게시물 조회 - 목록2: 페이징 고려: 삭제 요청 된 행 포함 -->
+	 <select id="selectMyBoardList" resultType="com.spring5218.mypro00.domain.MyBoardVO">
+	 <![CDATA[
+	 	SELECT bno, btitle, bcontent, bwriter, bregdate, bmodDate, bviewsCnt, breplyCnt, bdelFlag
+	 	FROM ( SELECT /*+ INDEX_DESC (a pk_myboard) */ ROWNUM rn, a.*
+	 			FROM book_ex.tbl_myboard a
+				WHERE ROWNUM <= ( #{pageNum} * #{rowAmountPerPage} )
+	 		  )
+	 	WHERE rn >= ( ( #{pageNum} * #{rowAmountPerPage} ) - ( #{rowAmountPerPage} - 1 ) )
+	 ]]>
 	 </select>
-	
+
+<!-- 게시물 총 개수 조회(페이징): 삭제 요청된 행 제외 -->
+<!-- 아래 문장 사용 시, bdelFlag, bno를 키로 가지는 인덱스 추가 요망(성능) --><!--
+	 <select id="selectRowAmountTotal" resultType="Long">
+	 <![CDATA[
+		 SELECT count(*) totalCnt FROM book_ex.tbl_myboard
+		 WHERE bno > 0 AND bdelFlag = 0
+	 ]]>
+	 </select>-->
+
+<!-- 게시물 총 개수 조회(페이징): 삭제 요청된 행 포함 -->
+	 <select id="selectRowAmountTotal" resultType="long">
+	 <![CDATA[
+	 	SELECT count(*) totalCnt FROM book_ex.tbl_myboard
+	 ]]>
+	 </select>
+
 <!-- 게시물 등록1 - selectKey 이용않함 -->
 	 <insert id="insertMyBoard">
 	 <![CDATA[

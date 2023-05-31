@@ -67,6 +67,40 @@
 									 </c:forEach>
                                 </tbody>
                             </table>
+                            <%-- Pagination 시작 --%>
+							<div class='pull-right'>
+							 	<ul class="pagination pagination-sm">
+							 	<%-- 페이징 버튼 클릭 시, jQuery로 페이지 번호를 전달하도록 a 태그에 전달된 pagingCreator 객체의 필드 지정 --%>
+							 		<c:if test="${pagingCreator.prev}">
+							 			<li class="paginate_button previous">
+							 				<a href="1">&laquo;</a><%-- 맨 앞으로 페이지로 이동 --%>
+							 			</li>
+							 		</c:if>
+							 		<c:if test="${pagingCreator.prev}">
+							 			<li class="paginate_button previous">
+							 				<a href="${pagingCreator.startPagingNum - 1}">이전</a><%-- 이전 페이징 그룹 끝 페이지로 이동 --%>
+							 			</li>
+							 		</c:if>
+							 		<%-- 페이징 그룹의 페이징 숫자(10개 표시) --%>
+							 		<c:forEach var="pageNum" begin="${pagingCreator.startPagingNum}" end="${pagingCreator.endPagingNum}">
+							 		<%-- 선택된 숫자의 경우, Bootstrap의 active 클래스 이름 추가 --%>
+							 			<li class='paginate_button ${pagingCreator.myBoardPagingDTO.pageNum == pageNum ? "active":"" }'>
+							 				<a href="${pageNum}">${pageNum}</a>
+							 			</li>
+							 		</c:forEach>
+							 		<c:if test="${pagingCreator.next}">
+							 			<li class="paginate_button next">
+							 				<a href="${pagingCreator.endPagingNum +1}">다음</a><%-- 다음 페이징 그룹의 첫 페이지로 이동 --%>
+							 			</li>
+							 		</c:if>
+							 		<c:if test="${pagingCreator.next}">
+							 			<li class="paginate_button next">
+							 				<a href="${pagingCreator.lastPageNum}">&raquo;</a><%-- 맨 마지막으로 페이지로 이동 --%>
+							 			</li>
+							 		</c:if>
+							 	</ul>
+							</div><%-- Pagination 끝 --%>
+                            
                             <%-- Modal 모달 시작--%>
 							<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 							 	<div class="modal-dialog">
@@ -84,6 +118,9 @@
 							</div><%-- END .modal --%>
                             
                             <form id="frmSendValue"><%-- 전달할 hidden 유형의 input 요소들이 추가되어 값들이 전달될 비어있는 form --%>
+								<input type='hidden' name='pageNum' value='${pagingCreator.myBoardPagingDTO.pageNum}'> 
+								<input type='hidden' name='rowAmountPerPage' value='${pagingCreator.myBoardPagingDTO.rowAmountPerPage}'>
+								<input type='hidden' name='lastPageNum' value='${pagingCreator.lastPageNum}'>
 							</form>
                            
                         </div>
@@ -137,6 +174,18 @@
 		//checkModal(result);
 		</script>
 		<script>
+		
+		<%-- 페이징 화면 이동(페이징 버튼 클릭 이벤트 처리): 폼에 저장된 페이지번호를 클릭한 페이지번호로 변경한 후, 전송 --%>
+		$(".paginate_button a").on( "click", function(e) {
+			 e.preventDefault(); <%--a 태그의 클릭 시 동작 막음 --%>
+			 <%--폼에 저장된 현재 화면의 페이지번호를 클릭한 페이징 버튼의 페이지번호로 변경 --%>
+			 frmSendValue.find("input[name='pageNum']").val($(this).attr("href"));
+			 //alert(frmSendValue.find("input[name='pageNum']").val());
+			 frmSendValue.attr("action", "${contextPath}/myboard/list");
+			 frmSendValue.attr("method", "get");
+			 frmSendValue.submit();
+		});
+		
 		$(document).ready(function(){
 		 	//모달 동작 후, 아래의 history.pushState() 동작과 popstate 이벤트 리스너에 의해 뒤로가기 방지됨.
 		 	checkModal(result);

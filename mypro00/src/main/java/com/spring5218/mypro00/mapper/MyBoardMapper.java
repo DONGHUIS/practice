@@ -2,13 +2,20 @@ package com.spring5218.mypro00.mapper;
 
 import java.util.List;
 
+import com.spring5218.mypro00.common.paging.MyBoardPagingDTO;
 import com.spring5218.mypro00.domain.MyBoardVO;
 
 public interface MyBoardMapper {
 	
 	 //게시물 조회 - 목록
-	 public List<MyBoardVO> selectMyBoardList();
+	 //public List<MyBoardVO> selectMyBoardList();
 	 
+	//게시물 조회 - 목록(페이징 고려)
+	public List<MyBoardVO> selectMyBoardList(MyBoardPagingDTO myBoardPagingDTO);
+	
+	//게시물 총 개수 조회(페이징)
+	public long selectRowAmountTotal(MyBoardPagingDTO myBoardPagingDTO);
+	
 	 //게시물 등록1 - selectKey 이용 않함
 	 public Integer insertMyBoard(MyBoardVO myBoard);
 	 

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.spring5218.mypro00.common.paging.MyBoardPagingDTO;
 import com.spring5218.mypro00.domain.MyBoardVO;
 import com.spring5218.mypro00.mapper.MyBoardMapper;
 import lombok.AllArgsConstructor;
@@ -18,12 +19,13 @@ public class MyBoardServiceImpl implements MyBoardService{
 	 private MyBoardMapper myBoardMapper;
 	 
 	 
-	//게시물 목록 조회 서비스1
+	//게시물 목록 조회 서비스 - 페이징 고려
 	 @Override
-	 public List<MyBoardVO> getBoardList(){
+	 public List<MyBoardVO> getBoardList(MyBoardPagingDTO myBoardPagingDTO){
 		 log.info("MyBoardService.getBoardList() 실행");
-		 return myBoardMapper.selectMyBoardList();
+		 return myBoardMapper.selectMyBoardList(myBoardPagingDTO);
 	 }
+	 
 	 //게시물 등록:selectKey이용
 	 @Override
 	 public long registerBoard(MyBoardVO myBoard) {
@@ -51,6 +53,13 @@ public class MyBoardServiceImpl implements MyBoardService{
 	public MyBoardVO getBoardDetailModify(long bno) {
 		log.info("MyBoardService.getBoard()에 전달된 bno: " + bno);
 		return myBoardMapper.selectMyBoard(bno);
+	}
+	
+	//게시물 총 개수 조회 서비스 - 페이징 시 필요
+	@Override
+	public long getRowAmountTotal(MyBoardPagingDTO myBoardPagingDTO) {
+		log.info("MyBoardService.getRowAmountTotal()에 전달된 MyBoardPagingDTO: " + myBoardPagingDTO);
+		return myBoardMapper.selectRowAmountTotal(myBoardPagingDTO);
 	}
 	 
 	 //게시물 수정 처리

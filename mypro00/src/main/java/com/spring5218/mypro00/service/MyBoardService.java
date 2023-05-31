@@ -2,12 +2,13 @@ package com.spring5218.mypro00.service;
 
 import java.util.List;
 
+import com.spring5218.mypro00.common.paging.MyBoardPagingDTO;
 import com.spring5218.mypro00.domain.MyBoardVO;
 
 public interface MyBoardService{
 	 
-	 //게시물 목록 조회 서비스1
-	 public List<MyBoardVO> getBoardList();
+	//게시물 목록 조회 서비스 - 페이징 고려
+	public List<MyBoardVO> getBoardList(MyBoardPagingDTO myBoardPagingDTO);
 	
 	 //게시물 등록: selectKey이용
 	 public long registerBoard(MyBoardVO myBoard);
@@ -18,6 +19,9 @@ public interface MyBoardService{
 	//게시물 조회: 게시물 조회 페이지 -> 게시물 수정 페이지 호출(by bno), 조회수 변화 없음
 	//게시물 조회: 게시물 수정 후 -> 게시물 조회 페이지 호출(by bno), 조회수 증가 없음
 	public MyBoardVO getBoardDetailModify(long bno);
+	
+	//게시물 총 개수 조회 서비스 - 페이징 시 필요
+	public long getRowAmountTotal(MyBoardPagingDTO myBoardPagingDTO);
 	 
 	 //게시물 수정
 	 public boolean modifyBoard(MyBoardVO myBoard);

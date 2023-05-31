@@ -81,6 +81,22 @@
 		$("#BtnMoveList").on("click", function(){
 		 	location.href="${contextPath}/myboard/list";
 		})
+		
+		var result = '<c:out value="${result}"/>';
+		
+		function checkModifyOperation(result) {
+		 	if (result === ''|| history.state) {
+		 		return;
+		 	} else if (result === 'successModify'){
+		 		var myMsg = "글이 수정되었습니다";
+		 }
+		 
+		 alert(myMsg);
+		 myMsg='';
+		}
+		$(document).ready(function(){
+		 checkModifyOperation(result);
+		});
 		</script>
         
         <%@ include file="../myinclude/myfooter.jsp" %>

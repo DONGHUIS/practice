@@ -29,7 +29,8 @@
                              <%-- 아래의 내용 전체 추가 --%>
 							 <div class="form-group">
 							 	<label>글번호</label>
-							 	<input class="form-control" name="bno" value='<c:out value="${board.bno}"/>'/>
+							 	<input class="form-control" name="bno" value='<c:out value="${board.bno}"/>'
+							 			readonly="readonly"/>
 							 </div>
 							 <div class="form-group">
 							 	<label>글제목</label>

@@ -80,7 +80,7 @@
          	//e.preventDefault(); //버튼 유형이 submit가 아니므로 설정할 필요 없음
          
          	var operation = $(this).data("oper"); //각 버튼의 data-xxx 속성에 설정된 값을 저장
-         	alert("operation: "+ operation);
+         	//alert("operation: "+ operation);
          
          	if(operation == "modify"){ //게시물 수정 요청
          		frmModify.attr("action", "${contextPath}/myboard/modify");

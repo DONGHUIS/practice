@@ -20,7 +20,21 @@
 	 	SELECT bno, btitle, bcontent, bwriter, bregdate, bmodDate, bviewsCnt, breplyCnt, bdelFlag
 	 	FROM ( SELECT /*+ INDEX_DESC (a pk_myboard) */ ROWNUM rn, a.*
 	 			FROM book_ex.tbl_myboard a
-				WHERE ROWNUM <= ( #{pageNum} * #{rowAmountPerPage} )
+				WHERE 
+		]]>
+		<trim prefix="(" suffix=") AND" prefixOverrides="OR">
+		 <foreach item='scope' collection="scopeArray">
+		 <trim prefix="OR">
+		 <choose>
+		 <when test="scope == 'T'.toString()">btitle LIKE '%'||#{keyword}||'%'</when>
+		 <when test="scope == 'C'.toString()">bcontent LIKE '%'||#{keyword}||'%'</when>
+		 <when test="scope == 'W'.toString()">bwriter LIKE '%'||#{keyword}||'%'</when>
+		 </choose>
+		 </trim>	OR btitle LIKE '%'||#{keyword}||'%'
+		 </foreach>
+		</trim>
+		<![CDATA[
+				ROWNUM <= ( #{pageNum} * #{rowAmountPerPage} )
 	 		  )
 	 	WHERE rn >= ( ( #{pageNum} * #{rowAmountPerPage} ) - ( #{rowAmountPerPage} - 1 ) )
 	 ]]>
@@ -35,12 +49,25 @@
 	 ]]>
 	 </select>-->
 
-<!-- 게시물 총 개수 조회(페이징): 삭제 요청된 행 포함 -->
-	 <select id="selectRowAmountTotal" resultType="long">
-	 <![CDATA[
-	 	SELECT count(*) totalCnt FROM book_ex.tbl_myboard
-	 ]]>
-	 </select>
+<!-- 게시물 조회 - 총 게시물 개수(페이징, 검색고려): 삭제 요청된 행 포함 -->
+<select id="selectRowAmountTotal" resultType="Long">
+<![CDATA[
+ 	SELECT count(*) FROM book_ex.tbl_myboard
+]]>
+ <where>
+ 	<trim prefix="(" suffix=")" prefixOverrides="OR">
+ 		<foreach item='scope' collection="scopeArray">
+ 			<trim prefix="OR">
+ 				<choose>
+					 <when test="scope == 'T'.toString()">btitle LIKE '%'||#{keyword}||'%'</when>
+					 <when test="scope == 'C'.toString()">bcontent LIKE '%'||#{keyword}||'%'</when>
+					 <when test="scope == 'W'.toString()">bwriter LIKE '%'||#{keyword}||'%'</when>
+ 				</choose>
+ 			</trim>
+ 		</foreach>
+ 	</trim>
+  </where>
+</select>
 
 <!-- 게시물 등록1 - selectKey 이용않함 -->
 	 <insert id="insertMyBoard">

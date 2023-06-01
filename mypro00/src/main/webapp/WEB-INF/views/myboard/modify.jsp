@@ -61,6 +61,8 @@
 							 
 							 <input type='hidden' name='pageNum' value='${myBoardPagingDTO.pageNum}'>
  							 <input type='hidden' name='rowAmountPerPage' value='${myBoardPagingDTO.rowAmountPerPage}'>
+ 							 <input type='hidden' name='scope' value='${myBoardPagingDTO.scope}'>
+							 <input type='hidden' name='keyword' value='${myBoardPagingDTO.keyword}'>
 							 </form>
                         </div>
                         <!-- /.panel-body -->
@@ -90,12 +92,17 @@
          	} else if(operation == "list"){ //게시물 목록 화면 요청
          		var pageNumInput = $("input[name='pageNum']").clone(); //추가
          		var rowAmountInput = $("input[name='rowAmountPerPage']").clone(); //추가
-         		frmModify.empty();
-         		frmModify.attr("action","${contextPath}/myboard/list").attr("method","get");
+         		var scopeInput = $("input[name='scope']").clone();
+         		var keywordInput = $("input[name='keyword']").clone();
          		
+         		frmModify.empty();
+         		
+         		frmModify.attr("action","${contextPath}/myboard/list").attr("method","get");
          		//복사된 input 요소를 다시 form에 추가
          		frmModify.append(pageNumInput); //추가
          		frmModify.append(rowAmountInput); //추가
+         		frmModify.append(scopeInput);
+         		frmModify.append(keywordInput);
          		
          }
          

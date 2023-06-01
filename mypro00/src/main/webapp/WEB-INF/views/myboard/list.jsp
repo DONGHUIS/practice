@@ -26,6 +26,62 @@
 			</div><!-- /.panel-heading -->
                         
                         <div class="panel-body">
+                        
+                        <%-- 전달할 hidden 유형의 input 요소들이 추가되어 값들이 전달될 비어있는 form --%>
+						<%-- 목록 화면에서 페이징 화면 이동 시, 페이징 데이터 전달을 위해 사용됨 --%>
+						<%-- 표시 행수/검색유형/검색어 입력 form 시작 --%>
+						<form class="form-inline" id="frmSendValue" action="${contextPath}/myboard/list" method="get" name="frmSendValue">
+						 	<div class="form-group">
+						 		<label class="sr-only">frmSendValues</label>
+						 		<select class="form-control" id="selectAmount" name="rowAmountPerPage"><!-- 표시 게시물 수 선택 -->
+						 			<option value="10" <c:out value="${pagingCreator.myBoardPagingDTO.rowAmountPerPage eq '10'
+						 											 ? 'selected' : ''}" /> >10개</option>
+						 			<option value="20" <c:out value="${pagingCreator.myBoardPagingDTO.rowAmountPerPage eq '20'
+						 											 ? 'selected' : ''}" /> >20개</option>
+						 			<option value="50" <c:out value="${pagingCreator.myBoardPagingDTO.rowAmountPerPage eq '50'
+						 											 ? 'selected' : ''}" /> >50개</option>
+						 			<option value="100" <c:out value="${pagingCreator.myBoardPagingDTO.rowAmountPerPage eq '100'
+						 											 ? 'selected' : ''}" /> >100개</option>
+						 		</select>
+						 
+						 		<select class="form-control" id="selectScope" name="scope"><!-- 검색 범위 선택 -->
+						 			<option value="" <c:out value="${pagingCreator.myBoardPagingDTO.scope == null
+						 											 ? 'selected':''}" /> >검색범위</option>
+						 			<option value="T" <c:out value="${pagingCreator.myBoardPagingDTO.scope eq 'T'
+						 											? 'selected' : ''}" /> >제목</option>
+						 			<option value="C" <c:out value="${pagingCreator.myBoardPagingDTO.scope eq 'C'
+						 											? 'selected' : ''}" /> >내용</option>
+						 			<option value="W" <c:out value="${pagingCreator.myBoardPagingDTO.scope eq 'W'
+						 											? 'selected' : ''}" /> >작성자</option>
+						 			<option value="TC" <c:out value="${pagingCreator.myBoardPagingDTO.scope eq 'TC'
+						 											? 'selected' : ''}" /> >제목 + 내용</option>
+						 			<option value="TW" <c:out value="${pagingCreator.myBoardPagingDTO.scope eq 'TW'
+						               								 ? 'selected' : ''}" /> >제목 + 작성자</option>
+						 			<option value="TCW" <c:out value="${pagingCreator.myBoardPagingDTO.scope eq 'TCW'
+						 											  ? 'selected' : ''}" /> >제목 + 내용 + 작성자</option>
+						 		</select>
+						 
+						 <div class="input-group"><!-- 검색어 입력 -->
+						 	<input class="form-control" id="inputKeyword" name="keyword" type="text" placeholder="검색어를 입력하세요"
+						 		   value='<c:out value="${pagingCreator.myBoardPagingDTO.keyword}" />' />
+						 	<span class="input-group-btn"><!-- 전송버튼 -->
+						 		<button class="btn btn-info" type="button" id="btnSearchGo">
+						 			검색 &nbsp;<i class="fa fa-search"></i>
+						 		</button>
+						 	</span>
+						 </div>
+						 
+						 <div class="input-group"><!-- 검색 초기화 버튼 -->
+						 	<button id="btnReset" class="btn btn-warning" type="reset">검색초기화</button>
+						 </div>
+						</div><%-- /.form-group --%>
+						 
+								<input type='hidden' name='pageNum' value='${pagingCreator.myBoardPagingDTO.pageNum}'> 
+								<input type='hidden' name='rowAmountPerPage' value='${pagingCreator.myBoardPagingDTO.rowAmountPerPage}'>
+								<input type='hidden' name='lastPageNum' value='${pagingCreator.lastPageNum}'>
+							</form><%-- END 검색범위 및 검색어 입력 폼 --%>
+							<br>
+                        
                             <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example" style="width:100%;text-align:center;" >
                                 <thead>
                                     <tr>
@@ -116,13 +172,6 @@
 							 		</div><%-- END .modal-content --%>
 							 	</div><%-- END .modal-dialog --%>
 							</div><%-- END .modal --%>
-                            
-                            <form id="frmSendValue"><%-- 전달할 hidden 유형의 input 요소들이 추가되어 값들이 전달될 비어있는 form --%>
-								<input type='hidden' name='pageNum' value='${pagingCreator.myBoardPagingDTO.pageNum}'> 
-								<input type='hidden' name='rowAmountPerPage' value='${pagingCreator.myBoardPagingDTO.rowAmountPerPage}'>
-								<input type='hidden' name='lastPageNum' value='${pagingCreator.lastPageNum}'>
-							</form>
-                           
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -166,36 +215,74 @@
 		 		var myMsg = "글이 삭제되었습니다";
 		 	} else if (parseInt(result) > 0) {
 		 		var myMsg = "게시글 " + parseInt(result) + " 번이 등록되었습니다.";
-		 }
-		 $(".modal-body").html(myMsg);
-		 $("#myModal").modal("show");
-		 myMsg='';
+			 }
+			 $(".modal-body").html(myMsg);
+			 $("#myModal").modal("show");
+			 myMsg='';
 		}
 		//checkModal(result);
 		</script>
 		<script>
 		
-		<%-- 페이징 화면 이동(페이징 버튼 클릭 이벤트 처리): 폼에 저장된 페이지번호를 클릭한 페이지번호로 변경한 후, 전송 --%>
-		$(".paginate_button a").on( "click", function(e) {
-			 e.preventDefault(); <%--a 태그의 클릭 시 동작 막음 --%>
-			 <%--폼에 저장된 현재 화면의 페이지번호를 클릭한 페이징 버튼의 페이지번호로 변경 --%>
-			 frmSendValue.find("input[name='pageNum']").val($(this).attr("href"));
-			 //alert(frmSendValue.find("input[name='pageNum']").val());
-			 frmSendValue.attr("action", "${contextPath}/myboard/list");
-			 frmSendValue.attr("method", "get");
+		$(document).ready(function() {
+			
+			<%-- 페이징 화면 이동(페이징 버튼 클릭 이벤트 처리): 폼에 저장된 페이지번호를 클릭한 페이지번호로 변경한 후, 전송 --%>
+			$(".paginate_button a").on( "click", function(e) {
+				 e.preventDefault(); <%--a 태그의 클릭 시 동작 막음 --%>
+				 <%--폼에 저장된 현재 화면의 페이지번호를 클릭한 페이징 버튼의 페이지번호로 변경 --%>
+				 frmSendValue.find("input[name='pageNum']").val($(this).attr("href"));
+				 //alert(frmSendValue.find("input[name='pageNum']").val());
+				 frmSendValue.attr("action", "${contextPath}/myboard/list");
+				 frmSendValue.attr("method", "get");
+				 frmSendValue.submit();
+			});
+			
+			
+			<%--검색 관련 요소의 이벤트 처리--%>
+			<%--표시행수 변경 이벤트 처리--%>
+			$("#selectAmount").on("change", function(){
+				 frmSendValue.find("input[name='pageNum']").val(1);
+				 frmSendValue.attr("action", "${contextPath}/myboard/list");
+				 frmSendValue.attr("method", "get");
+				 frmSendValue.submit();
+			});
+			
+			<%--검색버튼 클릭 이벤트 처리 --%>
+			$("#btnSearchGo").on("click", function(e) {
+			 if (!$("#selectScope").find("option:selected").val()) {
+			 	alert("검색범위를 선택하세요");
+			 	return false;
+			 }
+			 
+			 //if (!frmSendValue.find("input[name='keyword']").val()) {
+			 if (!frmSendValue.find("input[name='keyword']").val()) {
+			 	alert("검색어를 입력하세요");
+			 	return false;
+			 }
+			 
+			 frmSendValue.find("input[name='pageNum']").val("1");
 			 frmSendValue.submit();
-		});
+			});
+			 
+			<%--검색초기화 버튼 이벤트처리, 버튼 초기화 시, 1페이지에 목록 정보 다시 표시 --%>
+			$("#btnReset").on("click", function(){
+			 	$("#selectAmount").val(10);
+			 	$("#selectScope").val("");
+			 	$("#inputKeyword").val("") ;
+			 	$("#hiddenPageNum").val(1);
+			 	$("#hiddenLastPageNum").val("");
+			 	
+			 	frmSendValue.submit();
+			});
+			
+			 checkModal(result);
+			 window.addEventListener('popstate', function(event) { 
+			 	history.pushState(null, null, location.href); //뒤로가기 Block.
+			 })
+			 history.pushState(null, null, location.href);
+		})
 		
-		$(document).ready(function(){
-		 	//모달 동작 후, 아래의 history.pushState() 동작과 popstate 이벤트 리스너에 의해 뒤로가기 방지됨.
-		 	checkModal(result);
-		 	//popstate 이벤트를 처리하는 자바스크립트 리스너 추가, popstate는 간단히 브라우저의 뒤로가기 버튼 클릭 이벤트 이름입니다.
-		 	window.addEventListener('popstate', function(event) { 
-		 	history.pushState(null, null, location.href); //뒤로가기 Block.
-		 	})
-		 	//페이지 로딩 시에, 실행되어 현재 목록페이지의 URL을 강제로 최근 URL로서 히스토리 객체에 다시 추가
-		 	history.pushState(null, null, location.href);
-		});
+		
 		</script>
         
         <%@ include file="../myinclude/myfooter.jsp" %>

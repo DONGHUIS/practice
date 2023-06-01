@@ -26,23 +26,25 @@ public class MyBoardController {
 	@Setter(onMethod_ = @Autowired)
 	private MyBoardService myBoardService;
 	
-	//게시물 목록 조회 - 페이징 고려
+	//게시물 목록 조회 2 - 페이징 고려
 	@GetMapping("/list")
 	public void showBoardList(MyBoardPagingDTO myBoardPagingDTO, Model model) {
-		log.info("컨트롤러 - 게시물 목록 조회 시작.....");
-		log.info("컨트롤러에 전달된 사용자의 페이징처리 데이터: " + myBoardPagingDTO);
+		 log.info("컨트롤러 - 게시물 목록 조회 시작.....");
+		 log.info("컨트롤러에 전달된 사용자의 페이징처리 데이터: " + myBoardPagingDTO);
 		
-		model.addAttribute("boardList", myBoardService.getBoardList(myBoardPagingDTO));
-		
-		long rowAmountTotal = myBoardService.getRowAmountTotal(myBoardPagingDTO);
+		 model.addAttribute("boardList", myBoardService.getBoardList(myBoardPagingDTO));
+		 
+		 long rowAmountTotal = myBoardService.getRowAmountTotal(myBoardPagingDTO);
 		 log.info("컨트롤러에 전달된 게시물 총 개수: " + rowAmountTotal);
+		 
 		 MyBoardPagingCreatorDTO myBoardPagingCreatorDTO =
 				 				new MyBoardPagingCreatorDTO (rowAmountTotal, myBoardPagingDTO);
 		 log.info("컨트롤러에서 생성된 MyBoardCreaingPagingDTO 객체 정보: " + myBoardPagingCreatorDTO.toString());
 		 
 		 model.addAttribute("pagingCreator", myBoardPagingCreatorDTO );
-		log.info("컨트롤러 - 게시물 목록 조회 완료.....");
+		 log.info("컨트롤러 - 게시물 목록(페이징고려) 조회 완료.....");
 	}
+
 	 
 	//게시물 등록 - 페이지 호출
 	 @GetMapping("/register")
@@ -73,8 +75,9 @@ public class MyBoardController {
 	  log.info("컨트롤러 - 화면으로 전달할 model: "+ model);
 	 }
 	 
-	 /*
+	 
 	//특정 게시물 조회-수정 페이지 호출
+	 /*
 	 @GetMapping({"/detail", "/modify"})
 	 public void showBoardDetail(@RequestParam("bno") long bno, Model model) {
 		 log.info("컨트롤러 - 게시물 조회-수정 페이지 호출: "+ bno);
@@ -108,7 +111,8 @@ public class MyBoardController {
 		 redirectAttr.addAttribute("bno", myBoard.getBno());
 		 redirectAttr.addAttribute("pageNum", myBoardPagingDTO.getPageNum());
 		 redirectAttr.addAttribute("rowAmountPerPage", myBoardPagingDTO.getRowAmountPerPage());
-		 
+		 redirectAttr.addAttribute("scope", myBoardPagingDTO.getScope());
+		 redirectAttr.addAttribute("keyword", myBoardPagingDTO.getKeyword());
 		 log.info("화면으로 전달될 redirectAttr: "+ redirectAttr);
 		 
 		 return "redirect:/myboard/detailmod";
@@ -139,6 +143,8 @@ public class MyBoardController {
 	 }
 		 redirectAttr.addAttribute("pageNum", myBoardPagingDTO.getPageNum());
 		 redirectAttr.addAttribute("rowAmountPerPage", myBoardPagingDTO.getRowAmountPerPage());
+		 redirectAttr.addAttribute("scope", myBoardPagingDTO.getScope());
+		 redirectAttr.addAttribute("keyword", myBoardPagingDTO.getKeyword());
 		 log.info("화면으로 전달될 redirectAttr: "+ redirectAttr);
 		 
 		 return "redirect:/myboard/list";
@@ -156,6 +162,8 @@ public class MyBoardController {
 	 }
 		 redirectAttr.addAttribute("pageNum", myBoardPagingDTO.getPageNum());
 		 redirectAttr.addAttribute("rowAmountPerPage", myBoardPagingDTO.getRowAmountPerPage());
+		 redirectAttr.addAttribute("scope", myBoardPagingDTO.getScope());
+		 redirectAttr.addAttribute("keyword", myBoardPagingDTO.getKeyword());
 		 log.info("화면으로 전달될 redirectAttr: "+ redirectAttr);
 		 
 		 return "redirect:/myboard/list";
@@ -173,6 +181,8 @@ public class MyBoardController {
 		 
 		 redirectAttr.addAttribute("pageNum", myBoardPagingDTO.getPageNum());
 		 redirectAttr.addAttribute("rowAmountPerPage", myBoardPagingDTO.getRowAmountPerPage());
+		 redirectAttr.addAttribute("scope", myBoardPagingDTO.getScope());
+		 redirectAttr.addAttribute("keyword", myBoardPagingDTO.getKeyword());
 		 log.info("화면으로 전달될 redirectAttr: "+ redirectAttr);
 		 
 		 return "redirect:/myboard/list";

@@ -74,6 +74,8 @@
 			 <input type='hidden' name='bno' id="bno" value='<c:out value="${board.bno}"/>'>
 			 <input type='hidden' name='pageNum' value='${myBoardPagingDTO.pageNum}'>
 			 <input type='hidden' name='rowAmountPerPage' value='${myBoardPagingDTO.rowAmountPerPage}'>
+			 <input type='hidden' name='scope' value='${myBoardPagingDTO.scope}'>
+			 <input type='hidden' name='keyword' value='${myBoardPagingDTO.keyword}'>
 		</form>
         
         

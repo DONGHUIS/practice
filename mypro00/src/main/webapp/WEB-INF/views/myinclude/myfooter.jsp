@@ -6,7 +6,6 @@
 
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 
-</div>
     <!-- /#wrapper -->
 
     <!-- jQuery -->

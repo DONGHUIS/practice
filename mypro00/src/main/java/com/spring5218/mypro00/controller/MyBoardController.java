@@ -73,14 +73,14 @@ public class MyBoardController {
 	  log.info("컨트롤러 - 화면으로 전달할 model: "+ model);
 	 }
 	 
-	 
+	 /*
 	//특정 게시물 조회-수정 페이지 호출
 	 @GetMapping({"/detail", "/modify"})
 	 public void showBoardDetail(@RequestParam("bno") long bno, Model model) {
 		 log.info("컨트롤러 - 게시물 조회-수정 페이지 호출: "+ bno);
 		 model.addAttribute("board", myBoardService.getBoard(bno));
 		 log.info("컨트롤러 - 화면으로 전달할 model: "+ model);
-	 }
+	 }*/
 	 
 	//게시물 조회페이지 -> 수정페이지 호출(/modify)
 	 @GetMapping("/modify")

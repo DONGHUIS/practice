@@ -64,6 +64,7 @@
 	 	<list>
 	 		<value>classpath:com/spring5218/mypro00/mapper/MyBoardMapper.xml</value>
 	 		<!--<value>classpath:com/spring5218/mypro00/mapper/MyReplyMapper.xml</value>-->
+	 		<value>classpath:com/spring5218/mypro00/mapper/MyReplyMapper.xml</value>
 	 	</list>
 	 </property> 
  	</bean>

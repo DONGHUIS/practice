@@ -11,16 +11,16 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h3 class="page-header">Board - List</h3>
+                    <h3 class="page-header">커뮤니티</h3>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
             <!-- /.row -->
 			<div class="panel-heading">
 				 <div class="row">
-				 	<div class="col-md-6" style="font-size:20px; height: 45px; padding-top:10px;">게시글 목록</div>
+				 	<div class="col-md-6" style="font-size:20px; height: 45px; padding-top:10px;">자유게시판</div>
 				 		<div class="col-md-6" style="padding-top:8px;">
-				 			<button type="button" id="btnMoveRegister" class="btn btn-primary btn-sm pull-right">게시글 등록</button>
+				 			<button type="button" id="btnMoveRegister" class="btn btn-primary btn-sm pull-right">글 등록</button>
 				 </div>
 				 </div>
 			</div><!-- /.panel-heading -->

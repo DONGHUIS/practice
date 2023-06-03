@@ -57,4 +57,35 @@
 	 	DELETE FROM book_ex.tbl_myreply WHERE bno= #{bno} AND rno = #{rno}
 	 ]]>
 	 </delete>
+
+<!-- 댓글 목록 - 계층 쿼리 (페이징) -->
+	 <select id="selectMyReplyList" resultType="com.spring5218.mypro00.domain.MyReplyVO">
+	 <![CDATA[
+	 	SELECT bno, rno, rcontent, rwriter, rregDate, rmodDate, prno, lvl
+	 	FROM ( SELECT ROWNUM rn, b.*
+	 			FROM ( SELECT LEVEL lvl, a.*
+	 					FROM ( SELECT /*+ INDEX_ASC (a IDX_MYREPLY_BNO_RNO) */ *
+	 							FROM book_ex.tbl_myreply
+								WHERE bno = #{myReplyPagingDTO.bno}
+								) a
+	 					START WITH prno IS NULL
+	 					CONNECT BY PRIOR rno = prno
+	 					) b
+	 			)
+	 WHERE rn BETWEEN #{myReplyPagingDTO.pageNum} * #{myReplyPagingDTO.rowAmountPerPage}
+	 					- (#{myReplyPagingDTO.rowAmountPerPage} - 1) 
+	 			AND #{myReplyPagingDTO.pageNum} * #{myReplyPagingDTO.rowAmountPerPage}
+	 ]]>
+	 </select>
+
+<!-- 특정 게시물의 댓글 총 개수확인 -->
+ 	<select id="selectReplyTotalByBno" resultType="int">
+ 	<![CDATA[
+ 		SELECT /*+ INDEX (TBL_MYREPLY IDX_MYREPLY_BNO_RNO) */ count(*)
+ 		FROM book_ex.tbl_myreply
+ 		WHERE bno = #{ myReplyPagingDTO.bno}
+ 	]]>
+ 	</select>	 
+	 
+	 
 </mapper>

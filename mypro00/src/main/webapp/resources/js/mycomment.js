@@ -41,6 +41,33 @@ var myCommentClsr = ( function() {
 			 }
 	 	); //.ajax END
 	}//getCmtList END
+	
+	 //날짜시간 표시형식 설정 (서버와 상관없음)
+	 //JSON 날짜시간을 그대로 표시하면 1594169682000 이렇게 표시됩니다.
+	 //일반적인 날짜 시간 표시 형식으로 표시, 
+	 function showDatetime(datetimeValue) {
+	 
+		 var dateObj = new Date(datetimeValue);//전달된 댓글의 수정 날짜시간 값 저장
+		 var str ="";
+	 
+		 var yyyy = dateObj.getFullYear(); //YYYY
+		 var mm = dateObj.getMonth() + 1; // getMonth() is zero-based
+		 var dd = dateObj.getDate();
+		 var hh = dateObj.getHours();
+		 var mi = dateObj.getMinutes();
+		 var ss = dateObj.getSeconds();
+	 
+		 str= [yyyy, '/', 
+			 (mm > 9 ? '' : '0') + mm, '/',
+			 (dd > 9 ? '' : '0') + dd, ' ',
+			 (hh > 9 ? '' : '0') + hh, ':', 
+			 (mi > 9 ? '' : '0') + mi, ':', 
+			 (ss > 9 ? '' : '0') + ss].join(''); //배열값으로 하나의 문자열로 합침
+		 
+		 return str ;
+	}
+	
+	
 	return { 
 		getCmtList : getCmtList, //댓글 목록
 		registerCmt : registerCmt, //댓글 등록

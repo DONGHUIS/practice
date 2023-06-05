@@ -278,8 +278,8 @@
 					 str += replyPagingCreator.replyList[i].rwriter 
 					 	 + ' </strong>'
 					 	 + ' <span>&nbsp;</span>'
-					 	 + ' <small class="text-muted">'
-					 	 + replyPagingCreator.replyList[i].rmodDate //수정날짜가 정수값으로 표시됨
+					 	 + '<small class="text-muted">수정일: '
+					 	 + myCommentClsr.showDatetime(replyPagingCreator.replyList[i].rmodDate)
 					 	 + ' </small>';
 				if(replyPagingCreator.replyList[i].lvl > 1){ //답글인 경우, 답글을 표시
 					 str +=' <small>&nbsp; 답글</small>';
@@ -364,6 +364,18 @@
 			 		str +="</ul>";
 			 	$("#showCmtPagingNums").html(str); //#showCmtPagingNums div에 표시
 			}
+				
+			//선택된 페이징 번호의 게시물목록 가져오는 함수: 이벤트 전파 이용
+			$("#showCmtPagingNums").on("click","ul li a", function(e){
+			
+			e.preventDefault();
+			
+			var targetPageNum = $(this).attr("href");
+			console.log("targetPageNum: " + targetPageNum);
+			
+			showCmtList(targetPageNum);
+			
+			});	
 					 	
 			$(document).ready(function(){//페이지 로딩 시 함수 실행 
 				showCmtList(1);

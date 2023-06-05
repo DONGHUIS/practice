@@ -145,7 +145,7 @@ public class MyReplyController {
 	 }
 	 
 	 //게시물에 대한 특정 댓글/답글 삭제
-	 @DeleteMapping(value = "/{bno}/{rno}", produces = { "text/plain; charset=UTF-8" })
+	 @DeleteMapping(value = "/{bno}/{rno}", produces = {"text/plain; charset=UTF-8"})
 	 public ResponseEntity<String> removeReply(@PathVariable("bno") Long bno, 
 			 								   @PathVariable("rno") Long rno) { 
 		 log.info("댓글-컨트롤러 - 댓글 삭제-URI 추출 bno: " + bno);

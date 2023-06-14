@@ -376,7 +376,241 @@
 			showCmtList(targetPageNum);
 			
 			});	
-					 	
+			
+			<%--댓글 추가 요소 초기화 함수 --%>
+			function chgBeforeCmtBtn() {
+				 $("#btnChgCmtReg").attr("style", "display:in-block");
+				 $("#btnRegCmt").attr("style", "display:none");
+				 $("#btnCancelRegCmt").attr("style", "display:none");
+				 $(".txtBoxCmt").val("");
+				 $(".txtBoxCmt").attr("readonly", true);
+			} 
+			
+			<%--댓글 작성 버튼 클릭 - 댓글 등록 버튼으로 변경, 댓글 입력창 활성화--%>
+			$("#btnChgCmtReg").on("click", function(){
+					
+				 chgBeforeCmtRepBtns();
+				 chgBeforeCmtBtn();
+				 chgBeforeReplyBtn();
+				 
+				 $(this).attr("style", "display:none");
+				 $("#btnRegCmt").attr("style", "display:in-block;margin-right:2px");
+				 $("#btnCancelRegCmt").attr("style", "display:in-block");
+				 $(".txtBoxCmt").attr("readonly", false);
+			});
+			
+			<%--댓글등록 취소 클릭 --%>
+			$("#btnCancelRegCmt").on("click", function(){
+			 
+				if(!confirm("댓글 입력을 취소하시겠습니까?")){
+			 		
+					return ;
+			 }
+				
+			 chgBeforeCmtBtn();
+			
+			});
+			
+			<%--댓글등록 버튼 클릭 이벤트 처리 --%>
+			$("#btnRegCmt").on("click", function(){
+			 
+				var loginUser = "user9";
+			 	var txtBoxCmt = $(".txtBoxCmt").val(); 
+			 	var comment = { bno: bnoValue,
+							    rcontent: txtBoxCmt,
+							    rwriter: loginUser};
+			 	
+			 	console.log("댓글등록: 서버전송 객체내용: " + comment);
+				
+			 	myCommentClsr.registerCmt(
+					 comment,
+					 function(serverResult){ 
+					 	$(".txtBoxCmt").val("");
+					 	chgBeforeCmtBtn();
+					 
+					 	alert("댓글이 등록되었습니다");
+					 	showCmtList(-1); <%--댓글이 추가된 맨 마지막 페이지 표시--%>
+					}
+				);
+			});
+			 	
+			<%--답글 관련 화면 상태 초기화--%>
+			function chgBeforeReplyBtn(){
+				 $(".btnRegReply").remove();
+				 $(".btnCancelRegReply").remove();
+				 $(".txtBoxReply").remove();
+				 $(".btnChgReplyReg").attr("style", "display:in-block");
+			} 
+			
+			<%--답글 작성 버튼 클릭 이벤트--%>
+			<%--JSP 코드에 없는 생성된 요소, 이벤트 전파 사용 --%>
+			$(".chat").on("click", ".commentLi div div .btnChgReplyReg" ,function(){
+			 
+				$("p").attr("style", "display:in-block;");
+			 
+				chgBeforeCmtBtn();
+				chgBeforeReplyBtn();
+				chgBeforeCmtRepBtns();
+			 
+				var strTxtBoxReply = 
+					 "<textarea class='form-control txtBoxReply' name='rcontent' style='margin-bottom:10px;'"
+					 + " placeholder='답글작성을 원하시면, &#10;답글 작성 버튼을 클릭해주세요.'"
+					 + "></textarea>"
+					 + "<button type='button' class='btn btn-warning btn-xs btnRegReply'>답글 등록</button>"
+					 + "<button type='button' class='btn btn-danger btn-xs btnCancelRegReply'"
+					 + " style='margin-left:4px;'>취소</button>";
+			 
+			 $(this).after(strTxtBoxReply);
+			 $(this).attr("style", "display:none"); //답글 작성 버튼 감춤
+			})
+			
+			<%--답글등록 취소 클릭--%>
+			$(".chat").on("click", ".commentLi .btnCancelRegReply" ,function(){
+			 	if(!confirm("답글 입력을 취소하시겠습니까?")){
+			 		return ;
+			 }
+			 	chgBeforeReplyBtn();
+			});
+			
+			<%--답글 등록 버튼 클릭 이벤트 처리: 답글이 달린 댓글이 있는 페이지 표시--%>
+			$(".chat").on("click", ".commentLi .btnRegReply" ,function(){
+			 
+				var loginUser = "test8";
+			 	var pageNum = frmCmtPagingValue.find("input[name='pageNum']").val();
+			 	console.log("답글 추가가 발생된 댓글 페이지 번호: "+ pageNum);
+			 
+			 	var txtBoxReply = $(this).prev().val();
+			 	console.log("txtBoxReply: " + txtBoxReply);
+				
+			 	var prnoVal = $(this).closest("li").data("rno");
+			 	console.log("prnoVal: " + prnoVal);
+				
+			 	 var reply = { bno: bnoValue,
+			 			 rcontent: txtBoxReply,
+			 			 rwriter: loginUser,
+			 			 prno: prnoVal };
+			 	 
+			 	console.log("답글등록: 서버전송 객체내용: " + reply);
+			 	 
+			 	 myCommentClsr.registerReply(
+				 	 reply, 
+				 	 function(serverResult){ 
+				 	 
+				 		 alert("답글이 등록되었습니다");
+				 	 	 
+				 		 showCmtList(pageNum);<%--댓글이 추가된 페이지 표시--%>
+				 	 }
+			 	); 
+			 })
+			 
+			 <%--댓글/답글 수정-삭제-취소-입력창 삭제 함수--%>
+			function chgBeforeCmtRepBtns(){
+				 
+				$("p").attr("style","display:in-block;");
+				 
+				//답글처리관련버튼
+				 $(".btnModCmt").remove();
+				 $(".btnDelCmt").remove();
+				 $(".btnCancelCmt").remove();
+				 $(".txtBoxMod").remove();
+			}
+			
+			<%--댓글-답글 수정/삭제 화면 요소 표시: p 태그 클릭 이벤트 --%>
+			$(".chat").on("click", ".commentLi p", function(){
+				 chgBeforeCmtBtn();<%--댓글 등록 상태 초기화--%>
+				 chgBeforeReplyBtn()<%--다른 답글 등록 상태 초기화--%>
+				 chgBeforeCmtRepBtns(); <%--다른 답글/댓글 수정 상태 초기화--%>
+				 
+				 $(this).parents("li").find(".btnChgReplyReg").attr("style", "display:none");
+				 
+				 var rcontent = $(this).text();
+				 console.log("선택된 댓글내용: " + rcontent);
+				 
+				 var strTxtBoxReply =
+					 "<textarea class='form-control txtBoxMod' name='rcontent' style='margin-bottom:10px;'"
+					 + " placeholder='답글작성을 원하시면,&#10;답글 작성 버튼을 클릭해주세요.'"
+					 + "></textarea>"
+					 + "<button type='button' class='btn btn-warning btn-sm btnModCmt'>수정</button> "
+					 + "<button type='button' class='btn btn-danger btn-sm btnDelCmt'>삭제</button>"
+					 + "<button type='button' class='btn btn-info btn-sm btnCancelCmt' style='margin-left: 4px;'>취소</button>";
+					 
+				 $(this).after(strTxtBoxReply);
+				 $(".txtBoxMod").val(rcontent);
+				 $(this).attr("style", "display:none");
+				
+			});
+			
+			<%--댓글-답글 수정/삭제의 취소 버튼 클릭 이벤트 --%>
+			$(".chat").on("click", ".commentLi .btnCancelCmt", function(){
+				 chgBeforeCmtBtn();
+				 chgBeforeReplyBtn();
+				 chgBeforeCmtRepBtns();
+			});
+			
+			<%-- 댓글-답글 수정 처리: 수정 버튼 클릭 이벤트 --%>
+			$(".chat").on("click", ".commentLi .btnModCmt", function(){
+				 <%--작성자 변수에 저장--%>
+				 var rwriterVal = $(this).siblings("p").data("rwriter");
+				 var pageNum = frmCmtPagingValue.find("input[name='pageNum']").val();
+				 console.log("댓글/답글 수정이 페이지 번호: "+ pageNum);
+				 
+				 var txtBoxComment = $(this).prev().val();
+				 console.log("txtBoxComment: " + txtBoxComment);
+				 
+				 var rnoVal = $(this).closest("li").data("rno");
+				 console.log("rnoVal: " + rnoVal);
+				 
+				 var comment = { bno: bnoValue,
+								 rno: rnoVal,
+								 rcontent: txtBoxComment,
+								 rwriter: rwriterVal };
+			 
+			 	console.log("답글등록: 서버전송 객체내용: " + comment);
+			 
+			 	myCommentClsr.modifyCmtReply(
+			 			comment,
+			 			function(serverResult){
+			 				alert("수정되었습니다");
+			 
+			 				showCmtList(pageNum); <%-- 답글이 추가된 페이지 표시 --%>
+			 		} 
+			 	);
+			});
+
+			<%--댓글-답글 삭제 처리: 삭제 버튼 클릭 이벤트 --%>
+			$(".chat").on("click", ".commentLi .btnDelCmt", function(){
+				 
+				 <%--작성자 변수에 저장--%>
+				 var rwriterVal = $(this).siblings("p").data("rwriter");
+				 var delConfirm = confirm('삭제하시겠습니까?');
+				 
+				 if(!delConfirm){
+				 	alert('삭제가 취소되었습니다.');
+				
+				 	return ;
+				 }
+				 
+				 var pageNum = frmCmtPagingValue.find("input[name='pageNum']").val();
+				 console.log("답글 삭제가 발생된 댓글 페이지 번호: "+ pageNum);
+				 
+				 var rnoVal = $(this).closest("li").data("rno");
+				 console.log("rnoVal: " + rnoVal);
+				 
+				 var myComment = { bno: bnoValue,
+								   rno: rnoVal,
+								   rwriter: rwriterVal };
+				 
+				 console.log("답글삭제: 서버전송 객체내용: " + myComment);
+				 
+				 myCommentClsr.removeCmtReply(
+				 		myComment,
+				 		function(serverResult){<%--서버에서 댓글저장 성공 시, 브라우저에서 실행될 콜백함수--%> 
+							 alert("삭제되었습니다.");
+							 showCmtList(pageNum); 
+				 		}
+				 	);
+				});
+			 	
 			$(document).ready(function(){//페이지 로딩 시 함수 실행 
 				showCmtList(1);
 			});

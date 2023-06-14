@@ -10,7 +10,6 @@ var myCommentClsr = ( function() {
 	 //error: 서버 처리 실패 시 브라우저에 의해 처리되는 함수
 	 
 	//댓글 목록(페이징) - ajax() 함수 사용
- 
 	function getCmtList(pagingParams, callback, error) {
 		var bno = pagingParams.bno;
 		var page = pagingParams.page || 1;
